@@ -13,8 +13,12 @@ find_package(Boost COMPONENTS system filesystem serialization unit_test_framewor
 include_directories(${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
-# yandex_contest_common yandex_contest_system yandex_contest_invoker
-list(APPEND libraries yandex_contest_common yandex_contest_system yandex_contest_invoker)
+# yandex_contest_*
+list(APPEND libraries
+    yandex_contest_common
+    yandex_contest_system
+    yandex_contest_invoker
+)
 
 # Local
 include_directories(include)
