@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE compat
 #include <boost/test/unit_test.hpp>
 
-#include "yandex/contest/system/execution/tests/BoostExecTest.hpp"
+#include "yandex/contest/tests/BoostExecTest.hpp"
 
 #include "yandex/contest/invoker/compat/Error.hpp"
 #include "yandex/contest/invoker/compat/ContainerContext.hpp"
