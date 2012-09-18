@@ -24,13 +24,12 @@ list(APPEND libraries
 include_directories(include)
 
 # Targets
-
 add_library(${PROJECT_NAME} SHARED
     src/empty.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${libraries})
 
-# installation
+# Installation
 install(DIRECTORY include DESTINATION .)
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
