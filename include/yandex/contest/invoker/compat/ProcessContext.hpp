@@ -4,6 +4,8 @@
 
 #include "yandex/contest/invoker/compat/detail/BasicContext.hpp"
 
+#include "bunsan/forward_constructor.hpp"
+
 #include <boost/noncopyable.hpp>
 
 namespace yandex{namespace contest{namespace invoker{namespace compat
@@ -13,8 +15,6 @@ namespace yandex{namespace contest{namespace invoker{namespace compat
     private:
         friend class ProcessGroupContext;
 
-        template <typename ... Args>
-        explicit ProcessContext(Args &&...args):
-            Context(std::forward<Args>(args)...) {}
+        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ProcessContext, Context)
     };
 }}}}

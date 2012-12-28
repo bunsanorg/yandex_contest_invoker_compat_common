@@ -7,6 +7,8 @@
 #include "yandex/contest/invoker/compat/detail/BasicContext.hpp"
 #include "yandex/contest/invoker/compat/detail/Handle.hpp"
 
+#include "bunsan/forward_constructor.hpp"
+
 #include <memory>
 
 #include <boost/noncopyable.hpp>
@@ -39,9 +41,7 @@ namespace yandex{namespace contest{namespace invoker{namespace compat
         }
 
     private:
-        template <typename ... Args>
-        explicit ContainerContext(Args &&...args):
-            Context(std::forward<Args>(args)...) {}
+        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ContainerContext, Context)
     };
 
     typedef std::shared_ptr<ContainerContext> ContainerContextPointer;

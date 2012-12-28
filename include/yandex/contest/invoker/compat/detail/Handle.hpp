@@ -2,6 +2,8 @@
 
 #include "yandex/contest/invoker/compat/detail/BasicContextHandle.hpp"
 
+#include "bunsan/forward_constructor.hpp"
+
 namespace yandex{namespace contest{namespace invoker{namespace compat{namespace detail
 {
     template <typename Context_>
@@ -14,8 +16,6 @@ namespace yandex{namespace contest{namespace invoker{namespace compat{namespace 
         using Parent::context;
         using Parent::member;
 
-        template <typename ... Args>
-        explicit Handle(Args &&...args):
-            Parent(std::forward<Args>(args)...) {}
+        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(Handle, Parent)
     };
 }}}}}
