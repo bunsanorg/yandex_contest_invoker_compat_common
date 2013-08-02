@@ -1,10 +1,10 @@
 #define BOOST_TEST_MODULE compat
 #include <boost/test/unit_test.hpp>
 
-#include "yandex/contest/tests/BoostExecTest.hpp"
-
 #include "yandex/contest/invoker/compat/Error.hpp"
 #include "yandex/contest/invoker/compat/ContainerContext.hpp"
+
+#include "bunsan/testing/exec_test.hpp"
 
 using namespace yandex::contest::invoker;
 
