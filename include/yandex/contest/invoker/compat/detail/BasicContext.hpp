@@ -1,6 +1,6 @@
 #pragma once
 
-#include "yandex/contest/invoker/compat/detail/BasicContextChildren.hpp"
+#include <yandex/contest/invoker/compat/detail/BasicContextChildren.hpp>
 
 #include <boost/assert.hpp>
 

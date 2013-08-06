@@ -1,6 +1,6 @@
 #pragma once
 
-#include "yandex/contest/invoker/compat/detail/BasicContext.hpp"
+#include <yandex/contest/invoker/compat/detail/BasicContext.hpp>
 
 namespace yandex{namespace contest{namespace invoker{namespace compat{namespace detail
 {
