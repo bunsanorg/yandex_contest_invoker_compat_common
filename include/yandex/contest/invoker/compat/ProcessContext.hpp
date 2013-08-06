@@ -1,8 +1,8 @@
 #pragma once
 
-#include <yandex/contest/invoker/Process.hpp>
-
 #include <yandex/contest/invoker/compat/detail/BasicContext.hpp>
+
+#include <yandex/contest/invoker/Process.hpp>
 
 #include <bunsan/forward_constructor.hpp>
 

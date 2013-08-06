@@ -2,10 +2,10 @@
 
 #include <yandex/contest/invoker/Error.hpp>
 
-#include <unordered_map>
-
-#include <boost/noncopyable.hpp>
 #include <boost/assert.hpp>
+#include <boost/noncopyable.hpp>
+
+#include <unordered_map>
 
 namespace yandex{namespace contest{namespace invoker{namespace compat{namespace detail
 {

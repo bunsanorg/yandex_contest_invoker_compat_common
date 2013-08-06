@@ -1,17 +1,16 @@
 #pragma once
 
-#include <yandex/contest/invoker/Container.hpp>
-
-#include <yandex/contest/invoker/compat/ProcessGroupContext.hpp>
-
 #include <yandex/contest/invoker/compat/detail/BasicContext.hpp>
 #include <yandex/contest/invoker/compat/detail/Handle.hpp>
+#include <yandex/contest/invoker/compat/ProcessGroupContext.hpp>
+
+#include <yandex/contest/invoker/Container.hpp>
 
 #include <bunsan/forward_constructor.hpp>
 
-#include <memory>
-
 #include <boost/noncopyable.hpp>
+
+#include <memory>
 
 namespace yandex{namespace contest{namespace invoker{namespace compat
 {
