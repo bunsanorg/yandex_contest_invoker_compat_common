@@ -4,7 +4,7 @@
 #include <yandex/contest/invoker/compat/Error.hpp>
 #include <yandex/contest/invoker/compat/ContainerContext.hpp>
 
-#include <bunsan/testing/exec_test.hpp>
+#include <bunsan/test/exec_test.hpp>
 
 using namespace yandex::contest::invoker;
 
