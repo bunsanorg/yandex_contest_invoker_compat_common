@@ -2,58 +2,56 @@
 
 #include <yandex/contest/invoker/compat/detail/BasicContext.hpp>
 
-namespace yandex{namespace contest{namespace invoker{namespace compat{namespace detail
-{
-    struct InvalidHandleError: virtual Error {};
+namespace yandex {
+namespace contest {
+namespace invoker {
+namespace compat {
+namespace detail {
 
-    template <typename Context_>
-    class BasicContextHandle
-    {
-    public:
-        typedef BasicContextHandle<Context_> ContextHandle;
-        typedef Context_ Context;
-        typedef typename Context::ChildContext ChildContext;
-        typedef typename ChildContext::Member Member;
-        typedef std::shared_ptr<Context> ContextSharedPtr;
-        typedef std::weak_ptr<Context> ContextWeakPtr;
+struct InvalidHandleError : virtual Error {};
 
-    public:
-        BasicContextHandle(const ContextHandle &)=default;
-        BasicContextHandle &operator=(const ContextHandle &)=default;
+template <typename Context_>
+class BasicContextHandle {
+ public:
+  using ContextHandle = BasicContextHandle<Context_>;
+  using Context = Context_;
+  using ChildContext = typename Context::ChildContext;
+  using Member = typename ChildContext::Member;
+  using ContextSharedPtr = std::shared_ptr<Context>;
+  using ContextWeakPtr = std::weak_ptr<Context>;
 
-        void destroy()
-        {
-            ContextSharedPtr ctx = context_.lock();
-            if (ctx)
-                ctx->destroyChild(id_);
-        }
+ public:
+  BasicContextHandle(const ContextHandle &) = default;
+  BasicContextHandle &operator=(const ContextHandle &) = default;
 
-        explicit operator bool() const
-        {
-            return !context_.expired();
-        }
+  void destroy() {
+    ContextSharedPtr ctx = context_.lock();
+    if (ctx) ctx->destroyChild(id_);
+  }
 
-    protected:
-        BasicContextHandle()=default;
+  explicit operator bool() const { return !context_.expired(); }
 
-        BasicContextHandle(const ContextWeakPtr &context, const Id id):
-            context_(context), id_(id) {}
+ protected:
+  BasicContextHandle() = default;
 
-        ChildContext &context()
-        {
-            ContextSharedPtr ctx = context_.lock();
-            if (!ctx)
-                BOOST_THROW_EXCEPTION(InvalidHandleError());
-            return ctx->child(id_);
-        }
+  BasicContextHandle(const ContextWeakPtr &context, const Id id)
+      : context_(context), id_(id) {}
 
-        Member &member()
-        {
-            return context().member();
-        }
+  ChildContext &context() {
+    ContextSharedPtr ctx = context_.lock();
+    if (!ctx) BOOST_THROW_EXCEPTION(InvalidHandleError());
+    return ctx->child(id_);
+  }
 
-    private:
-        ContextWeakPtr context_;
-        Id id_ = 0;
-    };
-}}}}}
+  Member &member() { return context().member(); }
+
+ private:
+  ContextWeakPtr context_;
+  Id id_ = 0;
+};
+
+}  // namespace detail
+}  // namespace compat
+}  // namespace invoker
+}  // namespace contest
+}  // namespace yandex

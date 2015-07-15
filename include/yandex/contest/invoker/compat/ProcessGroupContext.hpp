@@ -13,30 +13,41 @@
 #include <memory>
 #include <utility>
 
-namespace yandex{namespace contest{namespace invoker{namespace compat
-{
-    class ProcessGroupContext:
-        public detail::BasicContext<ProcessGroupPointer, ProcessContext>,
-        public std::enable_shared_from_this<ProcessGroupContext>
-    {
-    public:
-        typedef detail::Handle<ProcessGroupContext> Handle;
+namespace yandex {
+namespace contest {
+namespace invoker {
+namespace compat {
 
-    public:
-        template <typename ... Args>
-        Handle createProcess(Args &&...args)
-        {
-            std::shared_ptr<ProcessContext> ctx(
-                new ProcessContext(
-                    member().createProcess(std::forward<Args>(args)...)));
-            return Handle(shared_from_this(), registerChildContext(std::move(ctx)));
-        }
+class ProcessGroupContext
+    : public detail::BasicContext<ProcessGroupPointer, ProcessContext>,
+      public std::enable_shared_from_this<ProcessGroupContext> {
+ public:
+  using Handle = detail::Handle<ProcessGroupContext>;
 
-    private:
-        friend class ContainerContext;
+ public:
+  template <typename... Args>
+  Handle createProcess(Args &&... args) {
+    return Handle(shared_from_this(),
+                  registerChildContext(ProcessContext::make_shared(
+                      member().createProcess(std::forward<Args>(args)...))));
+  }
 
-        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ProcessGroupContext, Context)
-    };
+ private:
+  friend class ContainerContext;
 
-    typedef ProcessGroupContext::Handle ProcessHandle;
-}}}}
+  template <typename... Args>
+  static std::shared_ptr<ProcessGroupContext> make_shared(Args &&... args) {
+    std::shared_ptr<ProcessGroupContext> ctx(
+        new ProcessGroupContext(std::forward<Args>(args)...));
+    return ctx;
+  }
+
+  BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ProcessGroupContext, Context)
+};
+
+using ProcessHandle = ProcessGroupContext::Handle;
+
+}  // namespace compat
+}  // namespace invoker
+}  // namespace contest
+}  // namespace yandex

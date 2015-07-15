@@ -7,56 +7,55 @@
 
 #include <unordered_map>
 
-namespace yandex{namespace contest{namespace invoker{namespace compat{namespace detail
-{
-    typedef std::size_t Id;
+namespace yandex {
+namespace contest {
+namespace invoker {
+namespace compat {
+namespace detail {
 
-    struct InvalidIdError: virtual Error
-    {
-        typedef boost::error_info<struct idTag, Id> id;
-    };
+using Id = std::size_t;
 
-    template <typename ChildContext>
-    class BasicContextChildren: private boost::noncopyable
-    {
-    private:
-        typedef BasicContextChildren<ChildContext> ContextChildren;
-        typedef std::shared_ptr<ChildContext> ChildContextSharedPtr;
-        typedef std::unordered_map<Id, ChildContextSharedPtr> Map;
+struct InvalidIdError : virtual Error {
+  using id = boost::error_info<struct idTag, Id>;
+};
 
-    public:
-        Id registerChildContext(std::shared_ptr<ChildContext> &&context)
-        {
-            const Id id = newId_++; // allocate unique id
-            BOOST_ASSERT(children_.find(id) == children_.end());
-            children_[id] = std::move(context);
-            return id;
-        }
+template <typename ChildContext>
+class BasicContextChildren : private boost::noncopyable {
+ private:
+  using ContextChildren = BasicContextChildren<ChildContext>;
+  using ChildContextSharedPtr = std::shared_ptr<ChildContext>;
+  using Map = std::unordered_map<Id, ChildContextSharedPtr>;
 
-        ChildContext &child(const Id id)
-        {
-            return *(index(id)->second);
-        }
+ public:
+  Id registerChildContext(std::shared_ptr<ChildContext> &&context) {
+    const Id id = newId_++;  // allocate unique id
+    BOOST_ASSERT(children_.find(id) == children_.end());
+    children_[id] = std::move(context);
+    return id;
+  }
 
-        void destroyChild(const Id id)
-        {
-            children_.erase(index(id));
-        }
+  ChildContext &child(const Id id) { return *(index(id)->second); }
 
-    private:
-        typename Map::iterator index(const Id id)
-        {
-            const typename Map::iterator iter = children_.find(id);
-            if (iter == children_.end())
-                BOOST_THROW_EXCEPTION(InvalidIdError() << InvalidIdError::id(id));
-            return iter;
-        }
+  void destroyChild(const Id id) { children_.erase(index(id)); }
 
-    private:
-        Id newId_ = 0;
-        Map children_;
-    };
+ private:
+  typename Map::iterator index(const Id id) {
+    const typename Map::iterator iter = children_.find(id);
+    if (iter == children_.end())
+      BOOST_THROW_EXCEPTION(InvalidIdError() << InvalidIdError::id(id));
+    return iter;
+  }
 
-    template <>
-    class BasicContextChildren<void> {};
-}}}}}
+ private:
+  Id newId_ = 0;
+  Map children_;
+};
+
+template <>
+class BasicContextChildren<void> {};
+
+}  // namespace detail
+}  // namespace compat
+}  // namespace invoker
+}  // namespace contest
+}  // namespace yandex

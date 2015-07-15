@@ -12,37 +12,46 @@
 
 #include <memory>
 
-namespace yandex{namespace contest{namespace invoker{namespace compat
-{
-    class ContainerContext:
-        public detail::BasicContext<ContainerPointer, ProcessGroupContext>,
-        public std::enable_shared_from_this<ContainerContext>
-    {
-    public:
-        typedef detail::Handle<ContainerContext> Handle;
+namespace yandex {
+namespace contest {
+namespace invoker {
+namespace compat {
 
-    public:
-        template <typename ... Args>
-        static std::shared_ptr<ContainerContext> create(Args &&...args)
-        {
-            const std::shared_ptr<ContainerContext> ctx(
-                new ContainerContext(Container::create(std::forward<Args>(args)...)));
-            return ctx;
-        }
+class ContainerContext
+    : public detail::BasicContext<ContainerPointer, ProcessGroupContext>,
+      public std::enable_shared_from_this<ContainerContext> {
+ public:
+  using Handle = detail::Handle<ContainerContext>;
 
-        template <typename ... Args>
-        Handle createProcessGroup(Args &&...args)
-        {
-            std::shared_ptr<ProcessGroupContext> ctx(
-                new ProcessGroupContext(
-                    member().createProcessGroup(std::forward<Args>(args)...)));
-            return Handle(shared_from_this(), registerChildContext(std::move(ctx)));
-        }
+ public:
+  template <typename... Args>
+  static std::shared_ptr<ContainerContext> create(Args &&... args) {
+    return make_shared(Container::create(std::forward<Args>(args)...));
+  }
 
-    private:
-        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ContainerContext, Context)
-    };
+  template <typename... Args>
+  Handle createProcessGroup(Args &&... args) {
+    return Handle(
+        shared_from_this(),
+        registerChildContext(ProcessGroupContext::make_shared(
+            member().createProcessGroup(std::forward<Args>(args)...))));
+  }
 
-    typedef std::shared_ptr<ContainerContext> ContainerContextPointer;
-    typedef ContainerContext::Handle ProcessGroupHandle;
-}}}}
+ private:
+  template <typename... Args>
+  static std::shared_ptr<ContainerContext> make_shared(Args &&... args) {
+    std::shared_ptr<ContainerContext> ctx(
+        new ContainerContext(std::forward<Args>(args)...));
+    return ctx;
+  }
+
+  BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(ContainerContext, Context)
+};
+
+using ContainerContextPointer = std::shared_ptr<ContainerContext>;
+using ProcessGroupHandle = ContainerContext::Handle;
+
+}  // namespace compat
+}  // namespace invoker
+}  // namespace contest
+}  // namespace yandex
